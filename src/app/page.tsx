@@ -1,12 +1,13 @@
 // src/app/page.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { fetchLiveNews, getAdminArticles, Article } from "../lib/newsStore";
 import { Clock, BookOpen, X } from "lucide-react";
 import { useSearchParams } from 'next/navigation';
 
-export default function HomePage() {
+// 1. Separate the logic into a child component that safely consumes search parameters
+function NewsFeedContent() {
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get('cat') || "";
   
@@ -34,7 +35,11 @@ export default function HomePage() {
   }, [activeCategory]);
 
   if (loading) {
-    return <div className="text-center py-24 font-mono text-xs uppercase tracking-widest text-neutral-400">Syncing Live Agency Feeds...</div>;
+    return (
+      <div className="text-center py-24 font-mono text-xs uppercase tracking-widest text-neutral-400 animate-pulse">
+        Syncing Live Agency Feeds...
+      </div>
+    );
   }
 
   const heroArticle = articles[0];
@@ -105,7 +110,7 @@ export default function HomePage() {
 
       {/* --- PREMIUM DETAIL READER MODAL FRAME --- */}
       {selectedArticle && (
-        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xs flex justify-center items-center p-4 overflow-y-auto animate-fade-in">
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xs flex justify-center items-center p-4 overflow-y-auto">
           <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto relative rounded-none shadow-2xl border border-neutral-400">
             {/* Top Modal Controls */}
             <div className="sticky top-0 bg-white border-b border-neutral-200 px-6 py-4 flex justify-between items-center z-10">
@@ -130,13 +135,19 @@ export default function HomePage() {
               <p className="text-neutral-800 text-sm md:text-base leading-relaxed whitespace-pre-wrap font-sans">
                 {selectedArticle.description}
               </p>
-              <div className="bg-neutral-50 border border-neutral-200 p-4 text-[11px] text-neutral-400 italic">
-                Disclaimer: The contents above are broadcast in real-time under a distributed API news architecture token payload framework. All distribution verification rights belong strictly to the citing agency author desk.
-              </div>
             </div>
           </div>
         </div>
       )}
     </div>
+  );
+}
+
+// 2. Wrap everything in a top-level Suspense Boundary to pass Vercel static checks
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div className="text-center py-24 font-mono text-xs uppercase tracking-widest text-neutral-400">Loading Terminal Layout...</div>}>
+      <NewsFeedContent />
+    </Suspense>
   );
 }
