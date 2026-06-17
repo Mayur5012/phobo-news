@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+
+:root {
+  --background: #f8f9fa;
+  --foreground: #111111;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-feature-settings: "ss01" on, "ss02" on, "cv01" on;
+}
+
+/* Custom editorial scrollbar for dense news feeds */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Typography Enhancements for Headlines */
+h1, h2, h3, .font-serif {
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
