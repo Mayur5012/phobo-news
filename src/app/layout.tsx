@@ -23,9 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <span className="text-red-500 font-bold">LIVE</span>
             <span className="text-neutral-400">Market Indexes Normalizing Across Global Desks</span>
           </div>
-          <Link href="/admin" className="flex items-center gap-1 text-neutral-400 hover:text-white transition">
-            <ShieldAlert size={14} /> Admin Terminal
-          </Link>
+        
         </div>
 
         {/* Main Editorial Header */}
@@ -38,13 +36,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
             
             {/* 80% Heavily Weighted Editorial Categories */}
-            <nav className="flex justify-center space-x-8 py-3 text-xs font-bold tracking-widest uppercase text-neutral-600 overflow-x-auto">
-              <Link href="/" className="hover:text-red-600 transition">Home</Link>
-              <Link href="/?cat=startups" className="hover:text-red-600 transition text-blue-600">🚀 Startups</Link>
-              <Link href="/?cat=politics" className="hover:text-red-600 transition text-amber-700">🏛️ Politics</Link>
-              <Link href="/?cat=sports" className="hover:text-red-600 transition text-emerald-700">⚽ Sports</Link>
-              <Link href="/?cat=other" className="hover:text-red-600 transition text-neutral-400">More</Link>
-            </nav>
+<nav className="flex justify-start md:justify-center space-x-6 sm:space-x-8 py-3 text-[11px] sm:text-xs font-bold tracking-widest uppercase text-neutral-600 overflow-x-auto whitespace-nowrap px-2 scrollbar-none">
+  <Link href="/" className="hover:text-red-600 transition">Home</Link>
+  <Link href="/?cat=startups" className="hover:text-blue-600 transition">🚀 Startups</Link>
+  <Link href="/?cat=politics" className="hover:text-amber-700 transition">🏛️ Politics</Link>
+  <Link href="/?cat=sports" className="hover:text-emerald-700 transition">⚽ Sports</Link>
+  <Link href="/?cat=other" className="hover:text-neutral-400 transition">More Mix</Link>
+</nav>
           </div>
         </header>
 
