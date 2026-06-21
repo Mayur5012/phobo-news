@@ -8,23 +8,35 @@ interface CategorySectionProps {
   articles: Article[];
 }
 
-export default function CategorySection({ title, articles }: CategorySectionProps) {
-  const displayArticles = articles.slice(0, 12);
-  if (displayArticles.length === 0) return null;
+export default function CategorySection({
+  title,
+  articles,
+}: CategorySectionProps) {
+const displayArticles = articles.slice(0, 10);
 
-  const leadArticle = displayArticles[0];
-  const sideArticles = displayArticles.slice(1, 3);
-  const listArticles = displayArticles.slice(3, 12);
+if (displayArticles.length === 0) return null;
+
+const leadArticle = displayArticles[0];
+
+const sideArticles = displayArticles.slice(1, 5); // 1,2,3,4
+
+const listArticles = displayArticles.slice(5, 10); // 5,6,7,8,9
+
+
 
   const categorySlug = title.toLowerCase();
 
   return (
-    <section className="border-b border-neutral-200 pb-6 space-y-4" aria-label={`${title} Category Section`}>
-      {/* Category Header */}
+    <section
+      className="border-b border-neutral-200 pb-8 space-y-4"
+      aria-label={`${title} Category Section`}
+    >
+      {/* Header */}
       <div className="border-b-2 border-neutral-900 pb-1 flex justify-between items-end">
         <h2 className="text-lg font-serif font-black tracking-tight text-neutral-900 uppercase">
           {title}
         </h2>
+
         <Link
           href={`/category/${categorySlug}`}
           className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#CC0000] hover:underline flex-shrink-0"
@@ -33,96 +45,171 @@ export default function CategorySection({ title, articles }: CategorySectionProp
         </Link>
       </div>
 
-      {/* 3-column grid: collapses to 1 column on mobile, 2 on tablet */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
 
-        {/* Lead Article (full width on mobile, half on tablet, 4 cols on desktop) */}
-        <div className="md:col-span-1 lg:col-span-4 group">
-          <article className="space-y-3 h-full flex flex-col">
+        {/* LEFT COLUMN */}
+        <div className="lg:col-span-5 space-y-6">
+
+          {/* Hero 1 */}
+          <article className="group">
             <Link
               href={`/news/${generateSlug(leadArticle.title)}`}
-              className="relative block aspect-[16/9] overflow-hidden bg-neutral-100 border border-neutral-200 flex-shrink-0"
+              className="block"
             >
-              <Image
-                src={leadArticle.image_url}
-                alt={leadArticle.title}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 380px"
-                className="object-cover group-hover:scale-[1.01] transition-transform duration-300"
-              />
+              <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100 border border-neutral-200">
+                <Image
+                  src={leadArticle.image_url}
+                  alt={leadArticle.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 500px"
+                  className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                />
+              </div>
             </Link>
-            <div className="space-y-1.5 flex-1">
+
+            <div className="mt-3">
               <Link href={`/news/${generateSlug(leadArticle.title)}`}>
-                <h3 className="font-sans font-extrabold text-sm sm:text-base text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-snug tracking-tight">
+                <h3 className="font-sans font-extrabold text-xl lg:text-2xl text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-tight tracking-tight">
                   {leadArticle.title}
                 </h3>
               </Link>
-              <p className="text-neutral-500 text-xs line-clamp-3 leading-relaxed">
+
+              <p className="text-neutral-600 text-sm mt-2 line-clamp-3">
                 {leadArticle.content}
               </p>
-              <time className="text-[9px] text-neutral-400 font-mono block">
-                {new Date(leadArticle.publishedAt).toLocaleDateString(undefined, {
-                  month: "short", day: "numeric",
-                })}
+
+              <time className="text-[10px] text-neutral-400 font-mono mt-2 block">
+                {new Date(
+                  leadArticle.publishedAt
+                ).toLocaleDateString()}
               </time>
             </div>
           </article>
+
+          {/* Hero 2 */}
+          {/* <article className="group border-t border-neutral-200 pt-5">
+            <Link
+              href={`/news/${generateSlug(leadArticle2.title)}`}
+              className="block"
+            >
+              <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100 border border-neutral-200">
+                <Image
+                  src={leadArticle2.image_url}
+                  alt={leadArticle2.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 500px"
+                  className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                />
+              </div>
+            </Link>
+
+            <div className="mt-3">
+              <Link href={`/news/${generateSlug(leadArticle2.title)}`}>
+                <h3 className="font-sans font-extrabold text-lg lg:text-xl text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-tight tracking-tight">
+                  {leadArticle2.title}
+                </h3>
+              </Link>
+
+              <p className="text-neutral-600 text-sm mt-2 line-clamp-3">
+                {leadArticle2.content}
+              </p>
+
+              <time className="text-[10px] text-neutral-400 font-mono mt-2 block">
+                {new Date(
+                  leadArticle2.publishedAt
+                ).toLocaleDateString()}
+              </time>
+            </div>
+          </article> */}
+
         </div>
 
-        {/* Side Thumbnail Cards (full width on mobile, half on tablet, 4 cols on desktop) */}
-        <div className="md:col-span-1 lg:col-span-4 flex flex-col gap-4 border-t md:border-t-0 lg:border-l lg:border-r border-neutral-200 pt-4 md:pt-0 lg:px-5">
-          {sideArticles.map((art) => {
-            const slug = generateSlug(art.title);
-            return (
-              <article key={art.title} className="group grid grid-cols-12 gap-3 items-start">
-                <Link
-                  href={`/news/${slug}`}
-                  className="col-span-4 relative aspect-[4/3] overflow-hidden bg-neutral-100 border border-neutral-200 block"
+        {/* CENTER COLUMN */}
+        <div className="lg:col-span-4 border-l border-r border-neutral-200 px-4">
+
+          <div className="space-y-4">
+
+            {sideArticles.map((art) => {
+              const slug = generateSlug(art.title);
+
+              return (
+                <article
+                  key={art.title}
+                  className="group flex gap-3 border-b border-neutral-100 pb-3"
                 >
-                  <Image
-                    src={art.image_url}
-                    alt={art.title}
-                    fill
-                    sizes="100px"
-                    className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                  />
-                </Link>
-                <div className="col-span-8 space-y-1">
-                  <Link href={`/news/${slug}`}>
-                    <h4 className="font-sans font-bold text-xs text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-tight tracking-tight">
-                      {art.title}
-                    </h4>
+                  <Link
+                    href={`/news/${slug}`}
+                    className="relative w-[120px] h-[80px] flex-shrink-0 overflow-hidden bg-neutral-100 border border-neutral-200"
+                  >
+                    <Image
+                      src={art.image_url}
+                      alt={art.title}
+                      fill
+                      sizes="120px"
+                      className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                    />
                   </Link>
-                  <time className="text-[9px] text-neutral-400 font-mono block">
-                    {new Date(art.publishedAt).toLocaleDateString(undefined, {
-                      month: "short", day: "numeric",
-                    })}
-                  </time>
-                </div>
-              </article>
-            );
-          })}
+
+                  <div className="flex-1">
+                    <Link href={`/news/${slug}`}>
+                      <h4 className="font-sans font-bold text-sm text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-tight tracking-tight">
+                        {art.title}
+                      </h4>
+                    </Link>
+
+                    <time className="text-[9px] text-neutral-400 font-mono block mt-1">
+                      {new Date(
+                        art.publishedAt
+                      ).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </time>
+                  </div>
+                </article>
+              );
+            })}
+
+          </div>
         </div>
 
-        {/* Headline List (full width on mobile, spans both cols on tablet, 4 cols on desktop) */}
-        <div className="md:col-span-2 lg:col-span-4 border-t lg:border-t-0 border-neutral-200 pt-4 lg:pt-0">
+        {/* RIGHT COLUMN */}
+        <div className="lg:col-span-3">
+
           <div className="divide-y divide-neutral-100">
+
             {listArticles.map((art) => {
               const slug = generateSlug(art.title);
+
               return (
-                <article key={art.title} className="py-2 first:pt-0 group">
-                  <Link href={`/news/${slug}`} className="flex items-start gap-2 justify-between">
-                    <h4 className="font-sans font-bold text-xs text-neutral-800 group-hover:text-[#CC0000] transition-colors leading-snug tracking-tight">
+                <article
+                  key={art.title}
+                  className="py-3 first:pt-0 group"
+                >
+                  <Link
+                    href={`/news/${slug}`}
+                    className="flex items-start gap-2 justify-between"
+                  >
+                    <h4 className="font-sans font-bold text-sm text-neutral-800 group-hover:text-[#CC0000] transition-colors leading-snug tracking-tight">
                       {art.title}
                     </h4>
+
                     <time className="text-[9px] text-neutral-400 font-mono flex-shrink-0 mt-0.5">
-                      {new Date(art.publishedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(
+                        art.publishedAt
+                      ).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </time>
                   </Link>
                 </article>
               );
             })}
+
           </div>
+
         </div>
 
       </div>
