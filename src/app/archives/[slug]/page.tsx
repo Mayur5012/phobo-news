@@ -1,31 +1,36 @@
-// src/app/news/[slug]/page.tsx
+// src/app/archives/[slug]/page.tsx
 import { getArticleBySlug, getNewsFeed, generateSlug } from "../../../lib/newsStore";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import ArticleView from "../../../components/ArticleView";
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: Promise<{
+    slug: string;
+  }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
-  const article = getArticleBySlug(resolvedParams.slug);
+  
+  // Strip any trailing extensions if they are passed dynamically (e.g. .html)
+  const cleanSlug = resolvedParams.slug.replace(/\.html$/, "");
+  const article = getArticleBySlug(cleanSlug);
   if (!article) return { title: "Article Not Found | ZamboToday" };
 
-  const slug = generateSlug(article.title);
-  const canonicalUrl = `https://www.zambotoday.com/news/${slug}`;
+  const primarySlug = generateSlug(article.title);
+  const primaryCanonicalUrl = `https://www.zambotoday.com/news/${primarySlug}`;
 
   return {
     title: `${article.title} | ZamboToday`,
     description: article.content.slice(0, 160),
     alternates: {
-      canonical: canonicalUrl,
+      canonical: primaryCanonicalUrl,
     },
     openGraph: {
       title: article.title,
       description: article.content.slice(0, 160),
-      url: canonicalUrl,
+      url: primaryCanonicalUrl,
       type: "article",
       images: [{ url: article.image_url }],
     },
@@ -45,13 +50,14 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ArticleDetailedPage({ params }: Props) {
+export default async function ArchivesSlugArticlePage({ params }: Props) {
   const resolvedParams = await params;
-  const article = getArticleBySlug(resolvedParams.slug);
+  const cleanSlug = resolvedParams.slug.replace(/\.html$/, "");
+  const article = getArticleBySlug(cleanSlug);
   if (!article) notFound();
 
-  const slug = generateSlug(article.title);
-  const canonicalUrl = `https://www.zambotoday.com/news/${slug}`;
+  const primarySlug = generateSlug(article.title);
+  const primaryCanonicalUrl = `https://www.zambotoday.com/news/${primarySlug}`;
 
-  return <ArticleView article={article} canonicalUrl={canonicalUrl} />;
+  return <ArticleView article={article} canonicalUrl={primaryCanonicalUrl} />;
 }

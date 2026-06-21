@@ -1,433 +1,261 @@
 // src/app/page.tsx
-'use client';
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Metadata } from "next";
+import { 
+  getSortedArticles, 
+  getPaddedArticlesByCategory, 
+  getMostReadArticles 
+} from "../lib/newsStoreHelper";
+import { generateSlug } from "../lib/newsStore";
+import BreakingTicker from "../components/BreakingTicker";
+import FeaturedGrid from "../components/FeaturedGrid";
+import CategorySection from "../components/CategorySection";
+import MostRead from "../components/MostRead";
+import LatestHeadlines from "../components/LatestHeadlines";
+import ShareButton from "../components/ShareButton";
+import { FileArchive, Landmark, Rocket, Trophy, Cpu } from "lucide-react";
 
-import React, { useState, useEffect, Suspense, useCallback } from 'react';
-import { getNewsFeed, generateSlug, Article } from "../lib/newsStore";
-import { Share2, X, Link2, Code2 } from "lucide-react";
-import { useSearchParams, useRouter } from 'next/navigation';
+// Homepage SEO Metadata
+export const metadata: Metadata = {
+  title: "Breaking News, Politics, Sports, Startups and Technology | ZamboToday",
+  description: "Latest breaking news, politics, startups, technology, sports and global coverage from ZamboToday.",
+  alternates: {
+    canonical: "https://www.zambotoday.com",
+  },
+  openGraph: {
+    title: "Breaking News, Politics, Sports, Startups and Technology | ZamboToday",
+    description: "Latest breaking news, politics, startups, technology, sports and global coverage from ZamboToday.",
+    url: "https://www.zambotoday.com",
+    type: "website",
+    siteName: "ZamboToday",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Breaking News, Politics, Sports, Startups and Technology | ZamboToday",
+    description: "Latest breaking news, politics, startups, technology, sports and global coverage from ZamboToday.",
+  },
+};
 
-function XBrandIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-      fill="currentColor"
-    >
-      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932L18.901 1.153Zm-1.29 19.493h2.039L6.486 3.24H4.298L17.61 20.646Z" />
-    </svg>
-  );
-}
-
-function LinkedInBrandIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-      fill="currentColor"
-    >
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.028-3.037-1.852-3.037-1.853 0-2.136 1.446-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286ZM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124ZM7.119 20.452H3.555V9H7.12v11.452Z" />
-    </svg>
-  );
-}
-
-function ShareDrawer({
-  article,
-  onClose,
-}: {
-  article: Article;
-  onClose: () => void;
-}) {
-  const [copied, setCopied] = useState(false);
-  const slug = generateSlug(article.title);
-  const url = typeof window !== 'undefined' ? `${window.location.origin}/news/${slug}` : '';
-  const text = encodeURIComponent(`Breaking: ${article.title}`);
-
-  const handleCopy = async (content: string, type?: 'embed') => {
-    await navigator.clipboard.writeText(content);
-    if (type === 'embed') {
-      alert('Embed code copied!');
-      return;
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+export default function HomePage() {
+  const sortedArticles = getSortedArticles();
+  
+  // Hero Story (index 0)
+  const heroArticle = sortedArticles[0];
+  
+  // Featured Stories (indices 1 to 8 of sortedArticles)
+  const featuredArticles = sortedArticles.slice(1, 9);
+  
+  // Category datasets (padded to 12 articles each)
+  const politicsArticles = getPaddedArticlesByCategory("politics", 12);
+  const startupsArticles = getPaddedArticlesByCategory("startups", 12);
+  const sportsArticles = getPaddedArticlesByCategory("sports", 12);
+  const technologyArticles = getPaddedArticlesByCategory("technology", 12);
+  
+  // Sidebar data
+  const mostReadArticles = getMostReadArticles(10);
+  
+  // Organization JSON-LD Schema
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "NewsMediaOrganization",
+    "name": "ZamboToday",
+    "url": "https://www.zambotoday.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.zambotoday.com/logo.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ZamboToday"
+    },
+    "sameAs": [
+      "https://x.com/zambotoday",
+      "https://www.facebook.com/zambotoday",
+      "https://www.linkedin.com/company/zambotoday"
+    ]
   };
 
   return (
-    <div
-      className="bg-neutral-50 border border-neutral-200 rounded p-3 mt-3 text-xs space-y-2.5 shadow-sm"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="flex justify-between items-center border-b border-neutral-200 pb-2">
-        <span className="text-[9px] font-black tracking-wider text-neutral-500 uppercase">
-          Share Wire
-        </span>
-        <button
-          onClick={onClose}
-          aria-label="Close share menu"
-          className="text-neutral-400 hover:text-black transition-colors p-0.5"
-        >
-          <X size={12} />
-        </button>
-      </div>
+    <>
+      {/* Schema Injection */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
 
-      <div className="grid grid-cols-2 gap-1.5">
-        <a
-          href={`https://x.com/intent/tweet?url=${encodeURIComponent(url)}&text=${text}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-1.5 bg-black text-white py-1.5 px-2 font-bold text-[10px] hover:bg-neutral-800 transition-colors rounded-sm"
-        >
-          <XBrandIcon />
-          X
-        </a>
+      <div className="space-y-6">
+        
+        {/* TICKER */}
+        <BreakingTicker articles={sortedArticles} />
 
-        <a
-          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-1.5 bg-[#0A66C2] text-white py-1.5 px-2 font-bold text-[10px] hover:bg-[#004182] transition-colors rounded-sm"
-        >
-          <LinkedInBrandIcon />
-          LinkedIn
-        </a>
+        {/* HERO & CENTERSTAGE AREA */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          {/* Main Hero & Featured Grid (Left) */}
+          <div className="lg:col-span-9 space-y-6">
+            
+            {/* Main Hero (Article 0) */}
+            {heroArticle && (
+              <div className="border-b border-neutral-200 pb-6 animate-fade-in">
+                <article className="group grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+                  <Link 
+                    href={`/news/${generateSlug(heroArticle.title)}`}
+                    className="md:col-span-7 lg:col-span-8 relative aspect-[16/9] overflow-hidden bg-neutral-100 border border-neutral-200 block w-full"
+                  >
+                    <Image
+                      src={heroArticle.image_url}
+                      alt={heroArticle.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 70vw, 800px"
+                      priority
+                      className="object-cover group-hover:scale-[1.01] transition-transform duration-300"
+                    />
+                    <div className="absolute top-3 left-3 bg-[#CC0000] text-white text-[9px] font-mono font-black tracking-widest uppercase px-2 py-0.5 shadow-md">
+                      TOP STORY
+                    </div>
+                  </Link>
+                  
+                  <div className="md:col-span-5 lg:col-span-4 flex flex-col justify-between h-full space-y-4 md:space-y-0">
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-mono text-[#CC0000] font-black uppercase tracking-wider block">
+                        {heroArticle.category === "other" ? "TECHNOLOGY" : heroArticle.category.toUpperCase()}
+                      </span>
+                      <Link href={`/news/${generateSlug(heroArticle.title)}`}>
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-serif font-black tracking-tight text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-tight">
+                          {heroArticle.title}
+                        </h2>
+                      </Link>
+                      <p className="text-neutral-600 text-xs sm:text-sm leading-relaxed line-clamp-6 lg:line-clamp-8">
+                        {heroArticle.content}
+                      </p>
+                    </div>
+                    
+                    <div className="pt-3 border-t border-neutral-200 flex items-center justify-between mt-auto">
+                      <time className="text-[10px] text-neutral-400 font-mono">
+                        {new Date(heroArticle.publishedAt).toLocaleDateString(undefined, {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </time>
+                      <div className="max-w-[120px]">
+                        <ShareButton article={heroArticle} />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            )}
 
-        <button
-          onClick={() => handleCopy(url)}
-          className="flex items-center justify-center gap-1.5 bg-neutral-200 text-neutral-800 py-1.5 px-2 font-bold text-[10px] hover:bg-neutral-300 transition-colors rounded-sm"
-        >
-          <Link2 size={10} />
-          {copied ? 'Copied!' : 'Copy URL'}
-        </button>
-
-        <button
-          onClick={() =>
-            handleCopy(
-              `<iframe src="${url}" width="100%" height="450"></iframe>`,
-              'embed'
-            )
-          }
-          className="flex items-center justify-center gap-1.5 bg-neutral-800 text-white py-1.5 px-2 font-bold text-[10px] hover:bg-neutral-900 transition-colors rounded-sm"
-        >
-          <Code2 size={10} />
-          Embed
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function CategoryBadge({
-  category,
-  className = "",
-}: {
-  category: string;
-  className?: string;
-}) {
-  return (
-    <span className={`text-[9px] text-red-600 font-black uppercase tracking-widest ${className}`}>
-      {category}
-    </span>
-  );
-}
-
-function HeroArticle({
-  article,
-  activeShareId,
-  onNavigate,
-  onToggleShare,
-}: {
-  article: Article;
-  activeShareId: string | null;
-  onNavigate: (title: string) => void;
-  onToggleShare: (e: React.MouseEvent, title: string) => void;
-}) {
-  const slug = generateSlug(article.title);
-
-  return (
-    <article
-      onClick={() => onNavigate(article.title)}
-      className="lg:col-span-2 space-y-3 sm:space-y-4 border-b lg:border-b-0 lg:border-r border-neutral-200 pb-6 lg:pb-0 lg:pr-6 xl:pr-8 cursor-pointer group"
-    >
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-neutral-200 rounded-sm">
-        <img
-          src={article.image_url}
-          alt={article.title}
-          className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-          loading="eager"
-        />
-        <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-red-600 text-white text-[9px] sm:text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded-sm">
-          {article.category}
-        </span>
-      </div>
-
-      <div className="flex justify-between items-start gap-3">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-black tracking-tight text-neutral-900 group-hover:text-red-700 transition-colors leading-tight">
-          {article.title}
-        </h2>
-        <button
-          onClick={(e) => onToggleShare(e, article.title)}
-          aria-label="Share article"
-          className="flex-shrink-0 p-2 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-600 text-[10px] font-bold uppercase flex items-center gap-1 transition-colors rounded-sm mt-0.5"
-        >
-          <Share2 size={12} />
-          <span className="hidden sm:inline">Share</span>
-        </button>
-      </div>
-
-      {activeShareId === slug && (
-        <ShareDrawer article={article} onClose={() => onToggleShare({ stopPropagation: () => {} } as React.MouseEvent, article.title)} />
-      )}
-
-      <p className="text-neutral-600 text-sm leading-relaxed line-clamp-3">
-        {article.content}
-      </p>
-    </article>
-  );
-}
-
-function SideArticle({
-  article,
-  activeShareId,
-  onNavigate,
-  onToggleShare,
-}: {
-  article: Article;
-  activeShareId: string | null;
-  onNavigate: (title: string) => void;
-  onToggleShare: (e: React.MouseEvent, title: string) => void;
-}) {
-  const slug = generateSlug(article.title);
-
-  return (
-    <div
-      onClick={() => onNavigate(article.title)}
-      className="py-3.5 first:pt-0 group cursor-pointer"
-    >
-      <CategoryBadge category={article.category} className="block mb-0.5" />
-      <div className="flex justify-between items-start gap-2">
-        <h4 className="font-sans font-bold text-sm tracking-tight text-neutral-900 group-hover:text-red-700 transition-colors line-clamp-2 leading-snug">
-          {article.title}
-        </h4>
-        <button
-          onClick={(e) => onToggleShare(e, article.title)}
-          aria-label="Share article"
-          className="flex-shrink-0 text-neutral-400 hover:text-black p-1 transition-colors mt-0.5"
-        >
-          <Share2 size={12} />
-        </button>
-      </div>
-
-      {activeShareId === slug && (
-        <ShareDrawer article={article} onClose={() => onToggleShare({ stopPropagation: () => {} } as React.MouseEvent, article.title)} />
-      )}
-    </div>
-  );
-}
-
-function GridArticleCard({
-  article,
-  activeShareId,
-  onNavigate,
-  onToggleShare,
-}: {
-  article: Article;
-  activeShareId: string | null;
-  onNavigate: (title: string) => void;
-  onToggleShare: (e: React.MouseEvent, title: string) => void;
-}) {
-  const slug = generateSlug(article.title);
-
-  return (
-    <article
-      onClick={() => onNavigate(article.title)}
-      className="bg-white border border-neutral-200 flex flex-col cursor-pointer group hover:shadow-md transition-all duration-200 rounded-sm overflow-hidden"
-    >
-      <div className="aspect-video overflow-hidden bg-neutral-100">
-        <img
-          src={article.image_url}
-          alt={article.title}
-          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-          loading="lazy"
-        />
-      </div>
-
-      <div className="p-3 sm:p-4 flex flex-col gap-2 flex-grow">
-        <div className="flex justify-between items-center">
-          <CategoryBadge category={`// ${article.category}`} />
-          <button
-            onClick={(e) => onToggleShare(e, article.title)}
-            aria-label="Share article"
-            className="text-neutral-400 hover:text-black transition-colors p-0.5"
-          >
-            <Share2 size={12} />
-          </button>
-        </div>
-
-        {activeShareId === slug && (
-          <ShareDrawer article={article} onClose={() => onToggleShare({ stopPropagation: () => {} } as React.MouseEvent, article.title)} />
-        )}
-
-        <h4 className="font-serif font-bold text-sm sm:text-base text-neutral-900 group-hover:text-red-700 transition-colors line-clamp-2 leading-snug">
-          {article.title}
-        </h4>
-
-        <p className="text-xs text-neutral-500 line-clamp-2 sm:line-clamp-3 leading-relaxed mt-auto pt-1">
-          {article.content}
-        </p>
-      </div>
-    </article>
-  );
-}
-
-function SkeletonLoader() {
-  return (
-    <div className="space-y-8 animate-pulse">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-        <div className="lg:col-span-2 space-y-4">
-          <div className="aspect-[16/9] bg-neutral-200 rounded-sm w-full" />
-          <div className="h-6 bg-neutral-200 rounded w-3/4" />
-          <div className="h-4 bg-neutral-200 rounded w-full" />
-          <div className="h-4 bg-neutral-200 rounded w-5/6" />
-        </div>
-        <div className="space-y-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="space-y-2 py-3.5 border-b border-neutral-100">
-              <div className="h-2.5 bg-neutral-200 rounded w-16" />
-              <div className="h-4 bg-neutral-200 rounded w-full" />
-              <div className="h-4 bg-neutral-200 rounded w-4/5" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pt-6 border-t border-neutral-200">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="bg-white border border-neutral-200 rounded-sm overflow-hidden">
-            <div className="aspect-video bg-neutral-200" />
-            <div className="p-4 space-y-2">
-              <div className="h-2.5 bg-neutral-200 rounded w-16" />
-              <div className="h-4 bg-neutral-200 rounded w-full" />
-              <div className="h-4 bg-neutral-200 rounded w-3/4" />
-            </div>
+            {/* FEATURED STORIES GRID (8 stories) */}
+            <FeaturedGrid articles={featuredArticles} />
+            
           </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
-function EmptyState({ category }: { category: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 sm:py-32 text-center space-y-3">
-      <span className="text-4xl" aria-hidden>📡</span>
-      <p className="font-mono text-xs uppercase tracking-widest text-neutral-400">
-        No signal on <span className="text-neutral-600 font-bold">{category || "this feed"}</span>
-      </p>
-      <p className="text-xs text-neutral-400">Check back shortly for updates.</p>
-    </div>
-  );
-}
-
-function NewsFeedContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const activeCategory = searchParams.get('cat') || "";
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeShareId, setActiveShareId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    const result = getNewsFeed(activeCategory);
-    setArticles(result);
-    setLoading(false);
-  }, [activeCategory]);
-
-  useEffect(() => {
-    const handleOutsideClick = () => setActiveShareId(null);
-    if (activeShareId) {
-      window.addEventListener('click', handleOutsideClick);
-    }
-    return () => window.removeEventListener('click', handleOutsideClick);
-  }, [activeShareId]);
-
-  const handleNavigate = useCallback((title: string) => {
-    router.push(`/news/${generateSlug(title)}`);
-  }, [router]);
-
-  const handleToggleShare = useCallback((e: React.MouseEvent, title: string) => {
-    e.stopPropagation();
-    const slug = generateSlug(title);
-    setActiveShareId((prev) => (prev === slug ? null : slug));
-  }, []);
-
-  if (loading) return <SkeletonLoader />;
-  if (!articles.length) return <EmptyState category={activeCategory} />;
-
-  const heroArticle = articles[0];
-  const sideArticles = articles.slice(1, 4);
-  const gridArticles = articles.slice(4, 15);
-
-  return (
-    <div className="space-y-8 sm:space-y-10">
-
-      {heroArticle && (
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
-          <HeroArticle
-            article={heroArticle}
-            activeShareId={activeShareId}
-            onNavigate={handleNavigate}
-            onToggleShare={handleToggleShare}
-          />
-
-          <aside className="space-y-3">
-            <h3 className="text-[10px] sm:text-xs font-black tracking-wider uppercase border-b-2 border-black pb-1.5 text-neutral-900">
-              Latest Stream
-            </h3>
-            <div className="divide-y divide-neutral-200">
-              {sideArticles.map((art) => (
-                <SideArticle
-                  key={art.title}
-                  article={art}
-                  activeShareId={activeShareId}
-                  onNavigate={handleNavigate}
-                  onToggleShare={handleToggleShare}
-                />
-              ))}
-            </div>
+          {/* SIDEBAR: MOST POPULAR */}
+          <aside className="lg:col-span-3 space-y-6 border-t lg:border-t-0 lg:border-l border-neutral-200 pt-6 lg:pt-0 lg:pl-6">
+            <MostRead articles={mostReadArticles} />
           </aside>
-        </section>
-      )}
+        </div>
 
-      {gridArticles.length > 0 && (
-        <section className="pt-6 sm:pt-8 border-t border-neutral-200">
-          <h3 className="text-[10px] sm:text-xs font-black tracking-wider uppercase border-b-2 border-black pb-1.5 text-neutral-900 mb-4 sm:mb-6">
-            More Stories
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-            {gridArticles.map((art) => (
-              <GridArticleCard
-                key={art.title}
-                article={art}
-                activeShareId={activeShareId}
-                onNavigate={handleNavigate}
-                onToggleShare={handleToggleShare}
-              />
-            ))}
+        {/* HIGH-DENSITY CATEGORY SECTIONS */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          {/* Main Category Feed */}
+          <div className="lg:col-span-9 space-y-6">
+            
+            <CategorySection title="Politics" articles={politicsArticles} />
+            <CategorySection title="Startups" articles={startupsArticles} />
+            <CategorySection title="Sports" articles={sportsArticles} />
+            <CategorySection title="Technology" articles={technologyArticles} />
           </div>
-        </section>
-      )}
-    </div>
+
+          {/* SIDEBAR: LATEST HEADLINES & ARCHIVE SPOTLIGHT */}
+          <aside className="lg:col-span-3 space-y-6 border-t lg:border-t-0 lg:border-l border-neutral-200 pt-6 lg:pt-0 lg:pl-6">
+            {/* LATEST HEADLINES (30-50 text links) */}
+            <LatestHeadlines articles={sortedArticles} />
+
+            {/* ARCHIVE SPOTLIGHT (5+ links) */}
+            <section className="bg-neutral-900 text-white border border-neutral-850 p-4 space-y-4" aria-label="Archive Spotlight">
+              <div className="border-b border-neutral-800 pb-1.5 flex items-center gap-2">
+                <FileArchive size={14} className="text-[#CC0000]" />
+                <h3 className="text-xs font-black tracking-widest uppercase font-sans">
+                  ARCHIVE SPOTLIGHT
+                </h3>
+              </div>
+
+              <div className="space-y-3.5 text-xs font-sans">
+                {/* Critical Expired Domain Authority URL */}
+                <div className="group space-y-1">
+                  <span className="text-[8px] font-mono text-neutral-500 font-bold uppercase tracking-widest block">// RETRIEVED</span>
+                  <Link 
+                    href="/archives/7439-Genealogy-of-Sultan-Sharif-Ul-Hashim-of-Sulu-Sultanate.html"
+                    className="font-bold text-neutral-200 group-hover:text-[#CC0000] transition-colors leading-tight"
+                  >
+                    Genealogy of Sultan Sharif Ul-Hashim of Sulu Sultanate
+                  </Link>
+                  <p className="text-[10px] text-neutral-500 leading-normal">
+                    Historical lineage and origins of Sulu Sultanate maritime state.
+                  </p>
+                </div>
+
+                <div className="h-[1px] bg-neutral-800" />
+
+                <div className="group space-y-1">
+                  <span className="text-[8px] font-mono text-neutral-500 font-bold uppercase tracking-widest block flex items-center gap-1">
+                    <Landmark size={9} /> HISTORICAL INDEX
+                  </span>
+                  <Link 
+                    href="/archives"
+                    className="font-bold text-neutral-300 group-hover:text-[#CC0000] transition-colors"
+                  >
+                    ZamboToday Newspaper Archives Hub
+                  </Link>
+                </div>
+
+                <div className="group space-y-1">
+                  <span className="text-[8px] font-mono text-neutral-500 font-bold uppercase tracking-widest block flex items-center gap-1">
+                    <Rocket size={9} /> LEGACY SECTOR
+                  </span>
+                  <Link 
+                    href="/category/startups"
+                    className="font-bold text-neutral-300 group-hover:text-[#CC0000] transition-colors"
+                  >
+                    Startups Historical Registry
+                  </Link>
+                </div>
+
+                <div className="group space-y-1">
+                  <span className="text-[8px] font-mono text-neutral-500 font-bold uppercase tracking-widest block flex items-center gap-1">
+                    <Trophy size={9} /> CHAMPIONS DESK
+                  </span>
+                  <Link 
+                    href="/category/sports"
+                    className="font-bold text-neutral-300 group-hover:text-[#CC0000] transition-colors"
+                  >
+                    Sports Championships Archive
+                  </Link>
+                </div>
+
+                <div className="group space-y-1">
+                  <span className="text-[8px] font-mono text-neutral-500 font-bold uppercase tracking-widest block flex items-center gap-1">
+                    <Cpu size={9} /> SYSTEM DESK
+                  </span>
+                  <Link 
+                    href="/category/technology"
+                    className="font-bold text-neutral-300 group-hover:text-[#CC0000] transition-colors"
+                  >
+                    Technology Wire Chronicles
+                  </Link>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+      </div>
+    </>
   );
 }
-
-export default function HomePage() {
-  return (
-    <Suspense fallback={<SkeletonLoader />}>
-      <NewsFeedContent />
-    </Suspense>
-  );
-} 
