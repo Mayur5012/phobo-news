@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     "Genealogy",
   ],
   alternates: {
-    canonical:
-      "https://zambotoday.com/archives/7439-Genealogy-of-Sultan-Sharif-Ul-Hashim-of-Sulu-Sultanate.html",
+    canonical: "https://www.zambotoday.com/archives/7439-Genealogy-of-Sultan-Sharif-Ul-Hashim-of-Sulu-Sultanate.html",
+
   },
   openGraph: {
     title:
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description:
       "Historical archive examining the founder of the Sulu Sultanate and his legacy.",
     type: "article",
-    url: "https://zambotoday.com/archives/7439-Genealogy-of-Sultan-Sharif-Ul-Hashim-of-Sulu-Sultanate.html",
+    url: "https://www.zambotoday.com/archives/7439-Genealogy-of-Sultan-Sharif-Ul-Hashim-of-Sulu-Sultanate.html",
   },
   twitter: {
     card: "summary_large_image",
@@ -51,8 +51,8 @@ export default function HistoricalArchivePage() {
       "@type": "Organization",
       name: "ZamboToday",
     },
-    datePublished: "2026-06-21",
-    dateModified: "2026-06-21",
+    datePublished: "2008-10-01", // approximate original date
+dateModified: "2026-06-21",  // your restoration date
   };
 
   return (

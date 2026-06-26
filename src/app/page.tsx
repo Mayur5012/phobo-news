@@ -19,22 +19,22 @@ import { FileArchive, Landmark, Rocket, Trophy, Cpu } from "lucide-react";
 
 // Homepage SEO Metadata
 export const metadata: Metadata = {
-  title: "Breaking News, Politics, Sports, Startups and Technology | ZamboToday",
-  description: "Latest breaking news, politics, startups, technology, sports and global coverage from ZamboToday.",
+  title: "Breaking News, Politics, Sports, Startups and OTHERS | ZamboToday",
+  description: "Latest breaking news, politics, startups, OTHERS, sports and global coverage from ZamboToday.",
   alternates: {
     canonical: "https://www.zambotoday.com",
   },
   openGraph: {
-    title: "Breaking News, Politics, Sports, Startups and Technology | ZamboToday",
-    description: "Latest breaking news, politics, startups, technology, sports and global coverage from ZamboToday.",
+    title: "Breaking News, Politics, Sports, Startups and OTHERS | ZamboToday",
+    description: "Latest breaking news, politics, startups, OTHERS, sports and global coverage from ZamboToday.",
     url: "https://www.zambotoday.com",
     type: "website",
     siteName: "ZamboToday",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Breaking News, Politics, Sports, Startups and Technology | ZamboToday",
-    description: "Latest breaking news, politics, startups, technology, sports and global coverage from ZamboToday.",
+    title: "Breaking News, Politics, Sports, Startups and OTHERS | ZamboToday",
+    description: "Latest breaking news, politics, startups, OTHERS, sports and global coverage from ZamboToday.",
   },
 };
 
@@ -51,7 +51,7 @@ export default function HomePage() {
   const politicsArticles = getPaddedArticlesByCategory("politics", 12);
   const startupsArticles = getPaddedArticlesByCategory("startups", 12);
   const sportsArticles = getPaddedArticlesByCategory("sports", 12);
-  const technologyArticles = getPaddedArticlesByCategory("technology", 12);
+  const OTHERSArticles = getPaddedArticlesByCategory("others", 12);
   
   // Sidebar data
   const mostReadArticles = getMostReadArticles(10);
@@ -120,7 +120,7 @@ export default function HomePage() {
                   <div className="md:col-span-5 lg:col-span-4 flex flex-col justify-between h-full space-y-4 md:space-y-0">
                     <div className="space-y-2">
                       <span className="text-[10px] font-mono text-[#CC0000] font-black uppercase tracking-wider block">
-                        {heroArticle.category === "other" ? "TECHNOLOGY" : heroArticle.category.toUpperCase()}
+                        {heroArticle.category === "other" ? "OTHERS" : heroArticle.category.toUpperCase()}
                       </span>
                       <Link href={`/news/${generateSlug(heroArticle.title)}`}>
                         <h2 className="text-xl sm:text-2xl lg:text-3xl font-serif font-black tracking-tight text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-tight">
@@ -169,7 +169,7 @@ export default function HomePage() {
             <CategorySection title="Politics" articles={politicsArticles} />
             <CategorySection title="Startups" articles={startupsArticles} />
             <CategorySection title="Sports" articles={sportsArticles} />
-            <CategorySection title="Technology" articles={technologyArticles} />
+            <CategorySection title="OTHERS" articles={OTHERSArticles} />
           </div>
 
           {/* SIDEBAR: LATEST HEADLINES & ARCHIVE SPOTLIGHT */}
@@ -244,10 +244,10 @@ export default function HomePage() {
                     <Cpu size={9} /> SYSTEM DESK
                   </span>
                   <Link 
-                    href="/category/technology"
+                    href="/category/others"
                     className="font-bold text-neutral-300 group-hover:text-[#CC0000] transition-colors"
                   >
-                    Technology Wire Chronicles
+                    OTHERS Wire Chronicles
                   </Link>
                 </div>
               </div>

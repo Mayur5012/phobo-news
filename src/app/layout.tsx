@@ -16,7 +16,7 @@ const NAV_LINKS = [
   { href: "/category/startups", label: "Startups", emoji: "🚀" },
   { href: "/category/politics", label: "Politics", emoji: "🏛️" },
   { href: "/category/sports", label: "Sports", emoji: "⚽" },
-  { href: "/category/technology", label: "Technology", emoji: "💻" },
+  { href: "/category/others", label: "Others", emoji: "💻" },
   { href: "/archives", label: "Archives", emoji: "🗄️" },
 ];
 

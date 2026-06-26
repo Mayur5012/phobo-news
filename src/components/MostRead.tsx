@@ -43,7 +43,7 @@ export default function MostRead({ articles }: MostReadProps) {
               </span>
               <div className="space-y-1 flex-1">
                 <span className="text-[9px] font-mono text-neutral-400 font-bold uppercase tracking-wider">
-                  {art.category === "other" ? "TECHNOLOGY" : art.category}
+                  {art.category === "other" ? "OTHERS" : art.category}
                 </span>
                 <Link href={`/news/${slug}`}>
                   <h4 className="font-sans font-bold text-xs text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-snug tracking-tight">

@@ -32,7 +32,7 @@ export const HISTORICAL_ROUTES: Record<string, HistoricalRoute> = {
   },
   '/tech-general-archive': {
     action: '301',
-    targetUrl: '/category/technology',
+    targetUrl: '/category/others',
   },
 };
 

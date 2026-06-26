@@ -4,13 +4,13 @@ import { getNewsFeed, Article } from "./newsStore";
 /**
  * Normalizes the UI/URL category name to match data.json schema.
  * - 'politics' maps to 'politics' and 'Politics'
- * - 'technology' maps to 'other'
+ * - 'others' maps to 'other'
  */
 export function getArticlesByCategory(category: string): Article[] {
   const allArticles = getNewsFeed();
   const lowerCat = category.toLowerCase();
   
-  if (lowerCat === "technology" || lowerCat === "other") {
+  if (lowerCat === "others" || lowerCat === "other") {
     return allArticles.filter((art) => art.category === "other");
   }
   

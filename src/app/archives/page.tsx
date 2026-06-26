@@ -64,7 +64,7 @@ export default function ArchivesPage() {
         {/* Vintage Header */}
         <div className="text-center border-double border-y-4 border-neutral-900 py-6 space-y-2">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-black tracking-tighter uppercase text-neutral-900">
-            THE CHRONICLE ARCHIVE
+            THE ZAMBOTODAY ARCHIVE
           </h1>
           <p className="font-mono text-[10px] tracking-widest text-neutral-500 uppercase font-sans">
             EST. 2012 — HISTORICAL PRESERVATION DIVISION — RETRIEVED BACKLINK PROFILE

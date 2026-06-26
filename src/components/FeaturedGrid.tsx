@@ -47,7 +47,7 @@ export default function FeaturedGrid({ articles }: FeaturedGridProps) {
                   </Link>
                   <div className="mt-2 space-y-1">
                     <span className="text-[9px] font-mono text-[#CC0000] font-black uppercase tracking-wider block">
-                      {art.category === "other" ? "TECHNOLOGY" : art.category.toUpperCase()}
+                      {art.category === "other" ? "OTHERS" : art.category.toUpperCase()}
                     </span>
                     <Link href={`/news/${slug}`}>
                       <h4 className="font-sans font-bold text-sm text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-snug tracking-tight">
@@ -110,7 +110,7 @@ export default function FeaturedGrid({ articles }: FeaturedGridProps) {
               return (
                 <article key={art.title} className="py-2.5 first:pt-0 group sm:py-0 lg:py-2.5 lg:first:pt-0">
                   <span className="text-[9px] font-mono text-neutral-400 font-bold uppercase tracking-wider block">
-                    {art.category === "other" ? "TECHNOLOGY" : art.category.toUpperCase()}
+                    {art.category === "other" ? "OTHERS" : art.category.toUpperCase()}
                   </span>
                   <Link href={`/news/${slug}`}>
                     <h4 className="font-sans font-black text-xs text-neutral-900 group-hover:text-[#CC0000] transition-colors leading-snug tracking-tight mt-0.5">

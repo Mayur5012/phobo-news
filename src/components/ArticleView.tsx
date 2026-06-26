@@ -47,8 +47,8 @@ export default function ArticleView({ article, canonicalUrl }: ArticleViewProps)
   };
 
   // JSON-LD BreadcrumbList Schema
-  const categorySlug = article.category === "other" ? "technology" : article.category.toLowerCase();
-  const categoryLabel = article.category === "other" ? "Technology" : article.category;
+  const categorySlug = article.category === "other" ? "others" : article.category.toLowerCase();
+  const categoryLabel = article.category === "other" ? "others" : article.category;
   
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -98,7 +98,7 @@ export default function ArticleView({ article, canonicalUrl }: ArticleViewProps)
         <div className="space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <span className="text-xs bg-[#CC0000] text-white font-mono font-black tracking-widest uppercase px-2 py-0.5">
-              {article.category === "other" ? "TECHNOLOGY" : article.category.toUpperCase()}
+              {article.category === "other" ? "OTHERS" : article.category.toUpperCase()}
             </span>
             <div className="max-w-[120px]">
               <ShareButton article={article} />

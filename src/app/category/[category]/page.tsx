@@ -11,7 +11,7 @@ interface Props {
   params: Promise<{ category: string }>;
 }
 
-const VALID_CATEGORIES = new Set(["politics", "startups", "sports", "technology"]);
+const VALID_CATEGORIES = new Set(["politics", "startups", "sports", "others"]);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
