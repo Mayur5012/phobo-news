@@ -2,7 +2,7 @@ import { getNewsFeed, generateSlug } from "../lib/newsStore";
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.zambotoday.com"; // ✅ correct, keep www
+  const baseUrl = "https://www.zambotoday.com";
 
   const articles = getNewsFeed();
 

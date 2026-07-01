@@ -12,6 +12,9 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://www.zambotoday.com/sitemap.xml",
+    sitemap: [
+      "https://www.zambotoday.com/sitemap.xml",
+      "https://www.zambotoday.com/news-sitemap.xml",
+    ],
   };
 }

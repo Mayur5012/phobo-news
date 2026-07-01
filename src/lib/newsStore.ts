@@ -15,7 +15,7 @@ export interface Article {
  * Drops structural stop-words and weights location identifiers at the URL tail
  */
 export const generateSlug = (title: string): string => {
-  let cleanTitle = title
+  const cleanTitle = title
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
     .trim();

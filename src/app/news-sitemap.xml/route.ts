@@ -4,9 +4,8 @@ import { generateSlug } from "../../lib/newsStore";
 export async function GET() {
   const sorted = getSortedArticles();
 
-  // Filter for articles published in the last 48 hours relative to June 21, 2026
-  const currentSimulatedTime = new Date("2026-06-21T22:54:26+05:30");
-  const fortyEightHoursAgo = new Date(currentSimulatedTime.getTime() - 48 * 60 * 60 * 1000);
+  const now = new Date();
+  const fortyEightHoursAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000);
 
   let newsArticles = sorted.filter(
     (art) => new Date(art.publishedAt) >= fortyEightHoursAgo
