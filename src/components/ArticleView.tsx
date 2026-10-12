@@ -26,9 +26,21 @@ export default function ArticleView({ article, canonicalUrl }: ArticleViewProps)
     "image": [article.image_url],
     "datePublished": isoDate,
     "dateModified": isoDate,
+    "inLanguage": "en-US",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": canonicalUrl
+    },
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/body//h1"
+      ]
+    },
     "author": {
       "@type": "Organization",
-      "name": "ZamboToday",
+      "name": "ZamboToday Editorial Desk",
       "url": "https://www.zambotoday.com"
     },
     "publisher": {
@@ -39,10 +51,6 @@ export default function ArticleView({ article, canonicalUrl }: ArticleViewProps)
         "@type": "ImageObject",
         "url": "https://www.zambotoday.com/logo.png"
       }
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": canonicalUrl
     }
   };
 

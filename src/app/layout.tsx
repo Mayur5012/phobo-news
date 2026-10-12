@@ -7,8 +7,34 @@ import Link from "next/link";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "ZAMBOTODAY | Premium News Network",
-  description: "Real-time global insights and regional wire updates on Startups, Politics, and Sports.",
+  metadataBase: new URL("https://www.zambotoday.com"),
+  title: {
+    default: "ZAMBOTODAY | Global & Regional News Network",
+    template: "%s | ZamboToday",
+  },
+  description: "Real-time global insights and regional wire updates on Startups, Politics, Technology, and Sports.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "ZAMBOTODAY | Global & Regional News Network",
+    description: "Real-time global insights and regional wire updates on Startups, Politics, Technology, and Sports.",
+    url: "https://www.zambotoday.com",
+    siteName: "ZamboToday",
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 const NAV_LINKS = [

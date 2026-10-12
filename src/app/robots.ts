@@ -4,7 +4,14 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: ["Googlebot", "Googlebot-News", "Bingbot"],
+        userAgent: [
+          "Googlebot",
+          "Googlebot-News",
+          "Bingbot",
+          "DotBot",
+          "AhrefsBot",
+          "SemrushBot"
+        ],
         allow: "/",
       },
       {
